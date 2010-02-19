@@ -7,9 +7,9 @@
 }
 \usage{ECIMCI_profiles}
 \details{
-  This profile db was built by Johannes Rauch using the ECI/MCI
-  corpus using the default options employed by package \pkg{textcat},
-  with all text documents encoded in UTF-8.
+  This profile db was built by Johannes Rauch, using the ECI/MCI corpus
+  and the default options employed by package \pkg{textcat}, with all
+  text documents encoded in UTF-8.
 
   The category ids used for the db are the respective IETF language tags
   (see \link[tau]{language} in package \pkg{tau}), using the ISO 639-2
