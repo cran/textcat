@@ -95,7 +95,7 @@ function(...)
 create_fp <-
 function(x, opts = textcat_options())
 {
-    marker <- if(opts$reduce) "\1" else "_"
+    marker <- if(opts$reduce) "\1" else "\2"
     fp <- tau::textcnt(as.character(x),
                        n = opts$n, split = opts$split,
                        marker = marker, method = "ngram",
