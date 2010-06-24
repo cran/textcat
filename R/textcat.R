@@ -68,11 +68,12 @@ function(x, p = ECIMCI_profiles, method = "CT")
 
     d <- textcat_xdist(x, p, method)
     ## For now assume that this really does distances.
-    colnames(d)[apply(d, 1L,
-                      function(d) {
-                          pos <- which(d == min(d))
-                          if(length(pos) > 1L) NA else pos
-                      })]
+    pos <- apply(d, 1L,
+                 function(d) {
+                     pos <- which(d == min(d))
+                     if(length(pos) > 1L) NA else pos
+                 })
+    ifelse(is.na(pos), NA_character_, colnames(d)[pos])
 }
 
 ### Internal stuff.
