@@ -26,7 +26,7 @@ function(x, id, ...)
     opts <- fp_options(...)
     fp <- lapply(split(x, rep(id, length.out = length(x))),
                  create_fp, opts)
-    .make_textcat_profile_db(fp, id, opts)
+    .make_textcat_profile_db(fp, names(fp), opts)
 }
 
 c.textcat_profile_db <-
