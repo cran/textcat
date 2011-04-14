@@ -6,9 +6,11 @@ textcat_options <-
 local({
     options <-
         list(## options for computing fingerprints
-             n = 5L, split = "[[:space:][:punct:][:digit:]]+",
+             n = 5L,
+             split = "[[:space:][:punct:][:digit:]]+", perl = FALSE,
              tolower = TRUE, reduce = TRUE, useBytes = FALSE,
-             ignore = "_", size = 1000L,
+             ignore = "_",
+             size = 1000L,
              ## options for computing distances
              method = "CT")
     function(option, value) {
@@ -58,7 +60,7 @@ function(x, ...)
 }
 
 textcat <-
-function(x, p = ECIMCI_profiles, method = "CT")
+function(x, p = TC_char_profiles, method = "CT")
 {
     if(is.null(method))
         method <- textcat_options("method")
@@ -79,7 +81,10 @@ function(x, p = ECIMCI_profiles, method = "CT")
 ### Internal stuff.
 
 fp_option_names <-
-    c("n", "split", "tolower", "reduce", "useBytes", "ignore", "size")
+    c("n",
+      "split", "perl", "tolower", "reduce", "useBytes",
+      "ignore",
+      "size")
 
 fp_options <-
 function(...)
@@ -97,13 +102,21 @@ create_fp <-
 function(x, opts = textcat_options())
 {
     marker <- if(opts$reduce) "\1" else "\2"
-    fp <- tau::textcnt(as.character(x),
-                       n = opts$n, split = opts$split,
+    useBytes <- opts$useBytes
+    fp <- tau::textcnt(as.character(x), n = opts$n,
+                       split = opts$split, tolower = opts$tolower,
                        marker = marker, method = "ngram",
-                       useBytes = opts$useBytes, decreasing = TRUE)
+                       useBytes = useBytes, perl = opts$perl,
+                       decreasing = TRUE)
+    ## For byte n-grams we use a "bytes" encoding.
+    if(useBytes)
+        Encoding(names(fp)) <- "bytes"
     ignore <- opts$ignore
-    if(length(ignore))
+    if(length(ignore)) {
+        if(opts$useBytes)
+            Encoding(ignore) <- "bytes"
         fp <- fp[is.na(match(names(fp), ignore))]
+    }
     ## Note that the fp length can be smaller than the size.
     size <- opts$size
     if(length(fp) > size)

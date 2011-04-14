@@ -24,13 +24,13 @@ textcat_profile_db(x, id, ...)
 \details{
   The text documents are split according to the given categories, and
   n-gram profiles are computed via \code{\link[tau]{textcnt}} in package
-  \pkg{tau}, with \pkg{textcat} options \code{n}, \code{split} and
-  \code{useBytes} corresponding to the respective \code{textcnt}
-  arguments, and option \code{reduce} setting argument \code{marker} as
-  needed.  N-grams listed in option \code{ignore} are removed, and only
-  the most frequent remaining ones retained, with the maximal number
-  given by option \code{size}.  The options employed for building the db
-  are stored in the db.
+  \pkg{tau}, with \pkg{textcat} options \code{n}, \code{split},
+  \code{perl} and \code{useBytes} corresponding to the respective
+  \code{textcnt} arguments, and option \code{reduce} setting argument
+  \code{marker} as needed.  N-grams listed in option \code{ignore} are
+  removed, and only the most frequent remaining ones retained, with the
+  maximal number given by option \code{size}.  The options employed for
+  building the db are stored in the db.
 
   There is a \code{\link{c}} method for combining profile dbs provided
   that these have identical options.
