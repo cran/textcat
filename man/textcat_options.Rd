@@ -27,6 +27,12 @@ textcat_options(option, value)
       
       Default: \code{"[[:space:][:punct:][:digit:]]+"}.
     }
+    \item{\code{perl}:}{
+      A logical indicating whether to use Perl-compatible regular
+      expressions in word splitting.
+
+      Default: \code{FALSE}.
+    }
     \item{\code{tolower}:}{
       A logical indicating whether to transform texts to lower case
       (after word splitting).
@@ -67,7 +73,7 @@ textcat_options(option, value)
   }
 }
 \seealso{
-  \code{\link{textcat_profile_db}} for how the first 6 options are used
+  \code{\link{textcat_profile_db}} for how the first 7 options are used
   when computing n-gram profiles.
   
   \code{\link[tau]{textcnt}} in package \pkg{tau} which provides the

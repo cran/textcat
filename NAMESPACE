@@ -1,7 +1,6 @@
 importFrom("tau", "textcnt")
 
-export("textcat", "textcat_options", "textcat_profile_db",
-       "ECIMCI_profiles")
+export("textcat", "textcat_options", "textcat_profile_db")
 
 S3method("c", "textcat_profile_db")
 S3method("print", "textcat_profile_db")
