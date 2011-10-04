@@ -1,6 +1,15 @@
 importFrom("tau", "textcnt")
+importFrom("slam",
+           "as.simple_triplet_matrix", "row_sums",
+           "simple_triplet_matrix", "tcrossprod_simple_triplet_matrix")
 
-export("textcat", "textcat_options", "textcat_profile_db")
+export("textcat",
+       "textcat_options",
+       "textcat_profile_db",
+       "textcat_xdist")
 
+S3method("[", "textcat_profile_db")
+S3method("as.matrix", "textcat_profile_db")
+S3method("as.simple_triplet_matrix", "textcat_profile_db")
 S3method("c", "textcat_profile_db")
 S3method("print", "textcat_profile_db")

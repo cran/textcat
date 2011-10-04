@@ -1,0 +1,12 @@
+80012150ca078de9f282eae8dbf5c729 *DESCRIPTION
+ca23b241df78084237b76f8a6e0f26a1 *NAMESPACE
+fe37c8860714dc3d91e3312e5e2f7d7f *R/textcat.R
+a8a0eed215044af9bdc470af4dcf4b05 *data/ECIMCI_profiles.rda
+a659a51fe32a60e931fc76cc039d3b85 *data/TC_byte_profiles.rda
+5209ccdaacf04e30519868f9dfc0e375 *data/TC_char_profiles.rda
+315e5e20500a0084f18c2421fcb102e5 *man/ECIMCI_profiles.Rd
+7fedc1f615617df9e9b7c6b618377961 *man/TC_profiles.Rd
+c0b09ec42e18d1b8906395e94af35182 *man/textcat.Rd
+1c9115247e077414f96926940483dfcf *man/textcat_options.Rd
+2cc9da93fedcace4244dfec25794dceb *man/textcat_profile_db.Rd
+3298f20cb02e9270ed96c055f12237ba *man/textcat_xdist.Rd

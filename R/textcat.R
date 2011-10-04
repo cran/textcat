@@ -5,52 +5,138 @@
 textcat_options <-
 local({
     options <-
-        list(## options for computing fingerprints
-             n = 5L,
-             split = "[[:space:][:punct:][:digit:]]+", perl = FALSE,
-             tolower = TRUE, reduce = TRUE, useBytes = FALSE,
-             ignore = "_",
-             size = 1000L,
-             ## options for computing distances
-             method = "CT")
+        list(profile_method = "textcnt",
+             profile_options = list(),
+             xdist_method = "CT",
+             xdist_options = list())
     function(option, value) {
-        if (missing(option)) return(options)
-        if (missing(value))
-            options[[option]]
+        if(missing(option)) return(options)
+        ## As there are really only 4 fixed options, we (p)match the 
+        ## option argument against the possible option names?
+        if(length(option <- as.character(option)) != 1L)
+            stop(gettextf("Invalid option length %d.", length(option)),
+                 domain = NA)
+        pos <- pmatch(option[1L], names(options))
+        if(is.na(pos))
+            stop(gettextf("Invalid option name %s.", sQuote(option)),
+                 domain = NA)
+        if(missing(value))
+            options[[pos]]
         else
-            options[[option]] <<- value
+            options[pos] <<- list(value)
+        ## (Ensuring that setting to NULL does not remove.)
     }
 })
 
+## When creating a profile db, we need to record the method and options
+## used for creating the db.
+##
+## For the options, we need to record the expanded value, as the
+## expansion may change when the global textcat options are changed.
+##
+## For the method, we currently record the non-expanded value, so that
+## built-in methods can be stored by name rather than value.  This
+## avoids having many copies of built-in methods around, but of course
+## requires run-time expansion (and might result in different expansions
+## if the built-in code changes).
+
 textcat_profile_db <-
-function(x, id, ...)
+function(x, id = NULL, method = NULL, ..., options = list(),
+         profiles = NULL)
 {
-    opts <- fp_options(...)
-    fp <- lapply(split(x, rep(id, length.out = length(x))),
-                 create_fp, opts)
-    .make_textcat_profile_db(fp, names(fp), opts)
+    if(!is.null(profiles)) {
+        method <- .profile_method(profiles)
+        options <- .profile_options(profiles)
+    } else {
+        options <-
+            .merge_options_with_defaults(c(list(...), options),
+                                         textcat_options("profile_options"))
+    }
+    method <- .match_profile_method(method)    
+
+    if(!is.null(id))
+        x <- split(x, rep(id, length.out = length(x)))
+
+    profiles <- mapply(method, x, MoreArgs = options, SIMPLIFY = FALSE)
+    names(profiles) <- names(x)
+    
+    textcat_profile_db_object(profiles, method, options)
 }
+
+textcat_profile_db_object <-
+function(profiles, method, options)
+{
+    if(!is.null(name <- attr(method, "name")))
+        method <- name
+    attributes(profiles) <-
+        list(names = names(profiles),
+             method = method, options = options)
+    class(profiles) <- "textcat_profile_db"
+    profiles
+}
+
+`[.textcat_profile_db` <-
+function(x, i)
+{
+    textcat_profile_db_object(NextMethod("["),
+                              .profile_method(x),
+                              .profile_options(x))
+}
+
+as.matrix.textcat_profile_db <-
+function(x, ...)
+{
+    ngrams <- unlist(lapply(x, names))
+    nms <- unique(ngrams)
+    y <- matrix(0, nrow = length(x), ncol = length(nms),
+                dimnames = list(names(x), nms))
+    y[cbind(rep.int(seq_along(x), sapply(x, length)),
+            match(ngrams, nms))] <-
+        unlist(x)
+    y
+}
+
+as.simple_triplet_matrix.textcat_profile_db <-
+function(x)
+{
+    ngrams <- unlist(lapply(x, names))
+    nms <- unique(ngrams)
+    simple_triplet_matrix(rep.int(seq_along(x),
+                                  sapply(x, length)),
+                          match(ngrams, nms),
+                          unlist(x),
+                          dimnames = list(names(x), nms))
+}
+
+## <NOTE>
+## When combining profiles dbs, or calling textcat() on a profile db, we
+## need to determine whether profile dbs were obtained using the same
+## method and options.  This is straightforward for the former, but
+## tricky for the latter, as we record the *given* options, so that
+## explicitly specifying an option with a default value would make a
+## difference.
+## This could be addressed by merging with the default values ...
+## </NOTE>
 
 c.textcat_profile_db <-
 function(...)
 {
     args <- list(...)    
-    ## Ensure common fp options.
-    for(nm in fp_option_names) {
-        if(length(unique(sapply(args, attr, nm)) > 1L))
-            stop(gettextf("Need common '%s'.", nm))
-    }
-        
+    ## Ensure common profile method and options.
+    if(length(unique(lapply(args, .profile_method)) > 1L))
+        stop(gettextf("Need common profile method."))
+    if(length(unique(lapply(args, .profile_options)) > 1L))
+        stop(gettextf("Need common profile options."))
     ## What about duplicated names?  Could merge ...
     if(any(duplicated(unlist(lapply(args, names)))))
         stop("Need unique ids.")
 
-    fp <- NextMethod("c")
+    profiles <- NextMethod("c")
     
-    .make_textcat_profile_db(fp, names(fp), attributes(args[[1L]]))
+    textcat_profile_db_object(profiles,
+                              .profile_method(args[[1L]]),
+                              .profile_options(args[[1L]]))
 }
-
-## Could add more methods eventually ...
 
 print.textcat_profile_db <-
 function(x, ...)
@@ -60,15 +146,23 @@ function(x, ...)
 }
 
 textcat <-
-function(x, p = TC_char_profiles, method = "CT")
+function(x, p = TC_char_profiles, method = "CT", ..., options = list())
 {
-    if(is.null(method))
-        method <- textcat_options("method")
-    
-    ## Use the profile db options for creating the fingerprints.
-    x <- lapply(as.character(x), create_fp, attributes(p))
+    if(inherits(x, "textcat_profile_db")) {
+        ## Ensure that x was obtained the same way as p.
+        if(!identical(.profile_method(x),
+                      .profile_method(p)))
+            stop(gettextf("Need common profile method."))
+        if(!identical(.profile_options(x),
+                      .profile_options(p)))
+            stop(gettextf("Need common profile options."))
+    } else {
+        ## Use the profile db options from p for creating the document
+        ## profiles from x.
+        x <- textcat_profile_db(x, profiles = p)
+    }
 
-    d <- textcat_xdist(x, p, method)
+    d <- textcat_xdist(x, p, method, options = c(list(...), options))
     ## For now assume that this really does distances.
     pos <- apply(d, 1L,
                  function(d) {
@@ -78,83 +172,115 @@ function(x, p = TC_char_profiles, method = "CT")
     ifelse(is.na(pos), NA_character_, colnames(d)[pos])
 }
 
-### Internal stuff.
-
-fp_option_names <-
-    c("n",
-      "split", "perl", "tolower", "reduce", "useBytes",
-      "ignore",
-      "size")
-
-fp_options <-
-function(...)
-{
-    opts <- textcat_options()[fp_option_names]
-    args <- list(...)
-    if(length(args)) { 
-        ind <- pmatch(names(args), names(opts), nomatch = 0L)
-        opts[ind] <- args[ind > 0L]
-    }
-    opts
-}
-
-create_fp <-
-function(x, opts = textcat_options())
-{
-    marker <- if(opts$reduce) "\1" else "\2"
-    useBytes <- opts$useBytes
-    fp <- tau::textcnt(as.character(x), n = opts$n,
-                       split = opts$split, tolower = opts$tolower,
-                       marker = marker, method = "ngram",
-                       useBytes = useBytes, perl = opts$perl,
-                       decreasing = TRUE)
-    ## For byte n-grams we use a "bytes" encoding.
-    if(useBytes)
-        Encoding(names(fp)) <- "bytes"
-    ignore <- opts$ignore
-    if(length(ignore)) {
-        if(opts$useBytes)
-            Encoding(ignore) <- "bytes"
-        fp <- fp[is.na(match(names(fp), ignore))]
-    }
-    ## Note that the fp length can be smaller than the size.
-    size <- opts$size
-    if(length(fp) > size)
-        fp <- fp[seq_len(size)]
-    fp
-}
-
-.make_textcat_profile_db <-
-function(fps, ids, opts)
-{
-    val <- fps
-    attributes(val) <- opts[fp_option_names]
-    names(val) <- ids
-    class(val) <- "textcat_profile_db"
-    val
-}
-
 
 textcat_xdist <-
-function(x, p, method = NULL)
+function(x, p = NULL, method = "CT", ..., options = list())
 {
     ## Compute distances between collections of profiles.
-    if(is.null(method))
-        method <- textcat_options("method")
-    if(is.character(method))
-        method <- textcat_xdist_methods_db[[method[1L]]]
-    else if(!is.function(method))
-        stop("Invalid 'method'.")
+
+    method <- .match_xdist_method(method)
+    options <-
+        .merge_options_with_defaults(c(list(...), options),
+                                     textcat_options("xdist_options"))
     
-    d <- matrix(0, length(x), length(p))
-    dimnames(d) <- list(names(x), names(p))    
-    if(is.character(x))                 # Be nice ...
-        x <- lapply(x, create_fp, attributes(p))
-    for(i in seq_along(x))
-        for(j in seq_along(p))
-            d[i, j] <- method(x[[i]], p[[j]])
+
+    xdist <- function(x, y) do.call(method, c(list(x, y), options))
+    
+    if(is.null(p)) {
+        nms <- names(x)        
+        if(!inherits(x, "textcat_profile_db"))
+            x <- textcat_profile_db(x)
+        if(identical(attr(method, "vectorized"), TRUE)) {
+            d <- xdist(x, NULL)
+        } else {
+            n <- length(x)
+            d <- matrix(0, n, n)
+            for(i in seq_len(n))
+                for(j in seq_len(i - 1L))
+                    d[i, j] <- xdist(x[[i]], x[[j]])
+            d <- d + t(d)
+        }
+        dimnames(d) <- list(nms, nms)            
+    } else {
+        nms_x <- names(x)
+        nms_p <- names(p)
+        if(!inherits(x, "textcat_profile_db")) {
+            if(!inherits(p, "textcat_profile_db")) {
+                x <- textcat_profile_db(x)
+                p <- textcat_profile_db(p, profiles = x)
+            } else {
+                x <- textcat_profile_db(x, profiles = p)
+            }
+        } else {
+            if(!inherits(p, "textcat_profile_db")) {
+                p <- textcat_profile_db(p, profiles = x)
+            }
+        }
+        if(identical(attr(method, "vectorized"), TRUE)) {
+            d <- xdist(x, p)
+        } else {
+            n_x <- length(x)
+            n_p <- length(p)
+            d <- matrix(0, n_x, n_p)
+            for(i in seq_along(x))
+                for(j in seq_along(p))
+                    d[i, j] <- xdist(x[[i]], p[[j]])
+        }
+        dimnames(d) <- list(nms_x, nms_p)
+    }
+
     d
 }
+
+## *******************************************************************
+
+## Built-in textcat profile methods.
+
+textcat_profile_methods_db <- new.env()
+
+textcat_profile_methods_db$textcnt <-
+function(x,     
+         n = 1 : 5,
+         split = "[[:space:][:punct:][:digit:]]+", perl = FALSE,
+         tolower = TRUE, reduce = TRUE, useBytes = FALSE,
+         ignore = "_",
+         size = 1000L)
+{
+    marker <- if(reduce) "\1" else "\2"
+    x <- as.character(x)
+    if(!useBytes)
+        x <- enc2utf8(x)
+    counts <- textcnt(x,
+                      n = max(n), split = split, tolower = tolower,
+                      marker = marker, method = "ngram",
+                      useBytes = useBytes, perl = perl,
+                      decreasing = TRUE)
+    ## For byte n-grams we use a "bytes" encoding.
+    if(useBytes)
+        Encoding(names(counts)) <- "bytes"
+    ## Ignore what should be ignored.
+    if(length(ignore)) {
+        if(useBytes)
+            Encoding(ignore) <- "bytes"
+        counts <- counts[is.na(match(names(counts), ignore))]
+    }
+    ## Only use n-grams with the given numbers of characters/bytes.
+    if(!identical(as.integer(n), seq_len(max(n)))) {
+        type <- if(useBytes) "bytes" else "chars"
+        counts <-
+            counts[!is.na(match(nchar(names(counts), type = type),
+                                n))]
+    }
+    ## Note that the number of counts can be smaller than the size.
+    if(length(size) && !is.na(size) && (length(counts) > size))
+        counts <- counts[seq_len(size)]
+
+    counts
+}
+
+## *******************************************************************
+
+## Built-in textcat xdist methods.
 
 textcat_xdist_methods_db <- new.env()
 
@@ -184,7 +310,7 @@ function(x, p, z = 0)
     list(x = x, p = p)
 }
 
-## Cavnar-Trenkle variant: most likely this should be used for CT.
+## Cavnar-Trenkle variant.
 textcat_xdist_methods_db$ranks <-
 function(x, p)
 {
@@ -194,9 +320,9 @@ function(x, p)
 
 ## Absolute Log Probability Difference.
 textcat_xdist_methods_db$ALPD <-
-function(x, p)
+function(x, p, eps = 1e-6)
 {
-    e <- .expand_x_and_p(x, p, 1e-6)
+    e <- .expand_x_and_p(x, p, eps)
     p <- e$x / sum(e$x)
     q <- e$p / sum(e$p)
     sum(abs(log(p) - log(q)))
@@ -210,18 +336,18 @@ function(x, p)
 ## Let us use the terms I-divergence and J-divergence ...
 
 textcat_xdist_methods_db$KLI <-
-function(x, p)
+function(x, p, eps = 1e-6)
 {
-    e <- .expand_x_and_p(x, p, 1e-6)
+    e <- .expand_x_and_p(x, p, eps)
     p <- e$x / sum(e$x)
     q <- e$p / sum(e$p)
     sum(p * log(p / q))
 }    
 
 textcat_xdist_methods_db$KLJ <-
-function(x, p)
+function(x, p, eps = 1e-6)
 {
-    e <- .expand_x_and_p(x, p, 1e-6)
+    e <- .expand_x_and_p(x, p, eps)
     p <- e$x / sum(e$x)
     q <- e$p / sum(e$p)
     sum((p - q) * log(p / q))
@@ -231,11 +357,108 @@ function(x, p)
 ## http://en.wikipedia.org/wiki/Kullback–Leibler_divergence.
 
 textcat_xdist_methods_db$JS <-
-function(x, p)
+function(x, p, eps = 1e-6)
 {
-    e <- .expand_x_and_p(x, p, 1e-6)
+    e <- .expand_x_and_p(x, p, eps)
     p <- e$x / sum(e$x)
     q <- e$p / sum(e$p)
     f <- function(t) t * log(t)
     sum(f(p) + f(q)) / 2 - sum(f((p + q) / 2))
+}
+
+## Cosine dissimilarity
+
+textcat_xdist_methods_db$cosine <-
+function(x, p)
+{
+    row_normalize <- function(m) {
+        m <- as.simple_triplet_matrix(m)
+        m / sqrt(row_sums(m ^ 2))
+    }
+    
+    if(is.null(p)) {
+        pmax(1 - tcrossprod_simple_triplet_matrix(row_normalize(x)), 0)
+    } else {
+        pmax(1 - tcrossprod_simple_triplet_matrix(row_normalize(x),
+                                                  row_normalize(p)), 0)
+    }
+}
+attr(textcat_xdist_methods_db$cosine, "vectorized") <- TRUE
+
+
+## *******************************************************************
+
+## Accessors for profile attributes.
+
+.profile_method <-
+function(x)
+    attr(x, "method")
+
+.profile_options <-
+function(x)
+    attr(x, "options")
+
+## Options and defaults.
+
+## Note that profile and xdist methods can have arbitrary names.
+## When constructing calls from given options and defaults:
+## * If there are no defaults, pass as is.
+## * If there are defaults, match their names against the names of
+##   the given options.
+## Partial matching of options to defaults really is a nightmare.
+## (Was possible in earlier versions because the sets of possible
+## options were fixed.)
+
+.merge_options_with_defaults <-
+function(x, defaults)
+{
+    c(x, defaults[is.na(match(names(defaults), names(x)))])
+}
+
+.match_profile_method <-
+function(method)
+{
+    if(is.null(method))
+        method <- textcat_options("profile_method")
+    if(is.character(method)) {
+        name <- method
+        if(length(name) != 1L)
+            stop(gettextf("Invalid method length %d.", length(name)),
+                 domain = NA)
+        builtins <- objects(textcat_profile_methods_db)
+        pos <- pmatch(name, builtins)
+        if(is.na(pos))
+            stop(gettextf("Invalid profile method name %s.",
+                          sQuote(name)),
+                 domain = NA)
+        method <- textcat_profile_methods_db[[builtins[pos]]]
+        attr(method, "name") <- name
+    }
+    else if(!is.function(method))
+        stop("Invalid profile method.")
+    method
+}
+
+.match_xdist_method <-
+function(method)
+{
+    if(is.null(method))
+        method <- textcat_options("xdist_method")
+    if(is.character(method)) {
+        name <- method
+        if(length(name) != 1L)
+            stop(gettextf("Invalid method length %d.", length(name)),
+                 domain = NA)
+        builtins <- objects(textcat_xdist_methods_db)
+        pos <- pmatch(name, builtins)
+        if(is.na(pos))
+            stop(gettextf("Invalid xdist method name %s.",
+                          sQuote(name)),
+                 domain = NA)
+        method <- textcat_xdist_methods_db[[builtins[pos]]]
+        attr(method, "name") <- name
+    }
+    else if(!is.function(method))
+        stop("Invalid xdist method.")
+    method
 }
