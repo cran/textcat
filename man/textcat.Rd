@@ -16,7 +16,7 @@ textcat(x, p = TC_char_profiles, method = "CT", ..., options = list())
   \item{p}{a textcat profile db.  By default, the TextCat character
     profiles are used (see \code{\link{TC_char_profiles}}).}
   \item{method}{a character string specifying a built-in method, or a
-    used-defined function for computing distances between \eqn{n}-gram
+    user-defined function for computing distances between \eqn{n}-gram
     profiles.  See \code{\link{textcat_xdist}} for details.}
   \item{...}{options to be passed to the method for computing distances
     between profiles.}

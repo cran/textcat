@@ -272,9 +272,11 @@ function(x,
                                 n))]
     }
     ## Note that the number of counts can be smaller than the size.
+    total <- sum(counts)
     if(length(size) && !is.na(size) && (length(counts) > size))
         counts <- counts[seq_len(size)]
 
+    attr(counts, "total") <- total
     counts
 }
 
@@ -367,6 +369,7 @@ function(x, p, eps = 1e-6)
 }
 
 ## Cosine dissimilarity
+## Used e.g. for An Crubadan, or [to some extent] in Damashek (1995).
 
 textcat_xdist_methods_db$cosine <-
 function(x, p)
@@ -384,6 +387,17 @@ function(x, p)
     }
 }
 attr(textcat_xdist_methods_db$cosine, "vectorized") <- TRUE
+
+## Dice dissimilarity.
+## Used e.g. in Khreisat (2009).
+
+textcat_xdist_methods_db$Dice <-
+function(x, p)
+{
+    nmx <- names(x)
+    nmp <- names(p)
+    1 - length(intersect(nmx, nmp)) / length(union(nmx, nmp))
+}
 
 
 ## *******************************************************************

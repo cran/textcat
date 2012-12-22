@@ -17,7 +17,7 @@ textcat_profile_db(x, id = NULL, method = NULL, ..., options = list(),
     indicating to treat each text document separately.
   }
   \item{method}{a character string specifying a built-in method, or a
-    used-defined function for computing distances between \eqn{n}-gram
+    user-defined function for computing distances between \eqn{n}-gram
     profiles, or \code{NULL} (default), corresponding to using the
     method and options used for creating \code{profiles} if this is not
     \code{NULL}, or otherwise the current value of \pkg{textcat} option
@@ -110,7 +110,7 @@ textcat_profile_db(x, id = NULL, method = NULL, ..., options = list(),
   non-ASCII characters must declare their encoding (see
   \code{\link{Encoding}}), and will be re-encoded to UTF-8.
 
-  Note that option \code{n} specifies \emph{all} numbers of chraracter
+  Note that option \code{n} specifies \emph{all} numbers of characters
   or bytes to be used in the profiles, and not just the maximal number:
   e.g., taking \code{n = 3} will create profiles only containing
   tri-grams.
