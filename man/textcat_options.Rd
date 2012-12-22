@@ -24,7 +24,7 @@ textcat_options(option, value)
       Default: \code{"textcat"}.
     }
     \item{\code{profile_options}:}{
-      A list of options to be passes to the method for computing
+      A list of options to be passed to the method for computing
       profiles. 
     
       Default: none (empty list).

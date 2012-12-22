@@ -15,7 +15,7 @@ textcat_xdist(x, p = NULL, method = "CT", ..., options = list())
     The default is equivalent to taking \code{p} as \code{x} (but more
     efficient).}
   \item{method}{a character string specifying a built-in method, or a
-    used-defined function for computing distances between \eqn{n}-gram
+    user-defined function for computing distances between \eqn{n}-gram
     profiles, or \code{NULL} (corresponding to the current value of
     \pkg{textcat} option \code{xdist_method} (see
     \code{\link{textcat_options}}).
@@ -54,7 +54,8 @@ textcat_xdist(x, p = NULL, method = "CT", ..., options = list())
       profiles, i.e., one minus the inner product of the frequency
       vectors normalized to Euclidean length one (and filled with zeros
       for entries missing in one of the vectors).}
-      
+    \item{\code{"Dice"}}{the Dice dissimilarity, i.e., the fraction of
+      \eqn{n}-grams present in one of the profiles only.}
   }
   For the measures based on distances of frequency distributions,
   \eqn{n}-grams of the two profiles are combined, and missing
