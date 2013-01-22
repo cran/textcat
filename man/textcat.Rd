@@ -38,6 +38,12 @@ textcat(x, p = TC_char_profiles, method = "CT", ..., options = list())
   In ``Proceedings of SDAIR-94, 3rd Annual Symposium on Document
   Analysis and Information Retrieval'', 161--175.
   \url{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.53.9367}
+
+  K. Hornik, P. Mair, J. Rauch, W. Geiger, C. Buchta and I. Feinerer
+  (2013).
+  The textcat Package for \eqn{n}-Gram Based Text Categorization in R.
+  \emph{Journal of Statistical Software}, \bold{52}/6, 1--17.
+  \url{http://www.jstatsoft.org/v52/i06/}.
 }
 \examples{
 textcat(c("This is an english sentence.",
