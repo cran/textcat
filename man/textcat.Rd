@@ -6,7 +6,8 @@
   the closest category \eqn{n}-gram profile.
 }
 \usage{
-textcat(x, p = TC_char_profiles, method = "CT", ..., options = list())
+textcat(x, p = textcat::TC_char_profiles, method = "CT", ...,
+        options = list())
 }
 \arguments{
   \item{x}{a character vector of texts, or an \R object which can be

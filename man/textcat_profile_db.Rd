@@ -5,8 +5,8 @@
   Create \eqn{n}-gram profile dbs for text categorization.
 }
 \usage{
-textcat_profile_db(x, id = NULL, method = NULL, ..., options = list(),
-                   profiles = NULL)
+textcat_profile_db(x, id = NULL, method = NULL, ...,
+                   options = list(), profiles = NULL)
 }
 \arguments{
   \item{x}{a character vector of text documents, or an \R object of text

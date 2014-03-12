@@ -146,7 +146,7 @@ function(x, ...)
 }
 
 textcat <-
-function(x, p = TC_char_profiles, method = "CT", ..., options = list())
+function(x, p = textcat::TC_char_profiles, method = "CT", ..., options = list())
 {
     if(inherits(x, "textcat_profile_db")) {
         ## Ensure that x was obtained the same way as p.
