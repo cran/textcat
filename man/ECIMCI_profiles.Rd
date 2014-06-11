@@ -13,7 +13,7 @@
   UTF-8.
 
   The category ids used for the db are the respective IETF language tags
-  (see \link[tau]{language} in package \pkg{tau}), using the ISO 639-2
+  (see \link[NLP]{language} in package \pkg{NLP}), using the ISO 639-2
   Part B language subtags and, for Serbian, the script employed (i.e., 
   \code{"scc-Cyrl"} and \code{"scc-Latn"} for Serbian written in
   Cyrillic and Latin script, respectively; all other languages in the

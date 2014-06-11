@@ -331,7 +331,7 @@ function(x, p, eps = 1e-6)
 }
 
 ## Kullback-Leibler divergences are a mess, see e.g.
-## http://en.wikipedia.org/wiki/Kullback–Leibler_divergence:
+## <http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>:
 ## What is commonly known as "K-L divergence" is called "mean
 ## information for discrimination" in the original reference; the
 ## symmetric version is called "divergence".
@@ -356,7 +356,7 @@ function(x, p, eps = 1e-6)
 }
 
 ## Jensen-Shannon divergence, see e.g.
-## http://en.wikipedia.org/wiki/Kullback–Leibler_divergence.
+## <http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>.
 
 textcat_xdist_methods_db$JS <-
 function(x, p, eps = 1e-6)

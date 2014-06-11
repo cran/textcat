@@ -1,5 +1,5 @@
 Package: textcat
-Version: 1.0-1
+Version: 1.0-2
 Title: N-Gram Based Text Categorization
 Authors@R: c(person("Kurt", "Hornik", role = c("aut", "cre"),
                     email = "Kurt.Hornik@R-project.org"),
@@ -8,12 +8,12 @@ Authors@R: c(person("Kurt", "Hornik", role = c("aut", "cre"),
                     email = "christian.buchta@wu.ac.at"),
              person("Ingo", "Feinerer", role = "aut",
                     email = "feinerer@logic.at"))
-Description: Text categorization based on n-grams
+Description: Text categorization based on n-grams.
 Depends: R (>= 2.13.0)
 Imports: tau (>= 0.0-11), slam
 License: GPL-2
 LazyData: yes
-Packaged: 2014-03-12 16:48:09 UTC; hornik
+Packaged: 2015-02-10 18:04:07 UTC; hornik
 Author: Kurt Hornik [aut, cre],
   Johannes Rauch [aut],
   Christian Buchta [aut],
@@ -21,4 +21,4 @@ Author: Kurt Hornik [aut, cre],
 Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-03-12 17:57:34
+Date/Publication: 2015-02-10 19:07:09
