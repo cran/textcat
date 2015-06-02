@@ -1,9 +1,9 @@
-aa61b248caedacd6029321be3eff34a9 *DESCRIPTION
+c34bc90b2ecc64eb7b372d8b2ff28f9c *DESCRIPTION
 ca23b241df78084237b76f8a6e0f26a1 *NAMESPACE
-6e8789b6b164a41698a0ffd12bb82735 *R/textcat.R
-4b3685e3de92f2640680426e304802f1 *data/ECIMCI_profiles.rda
-af3e72aa842119c4a32c6e3c1a60d32c *data/TC_byte_profiles.rda
-a43b84932b031efeee65e44f33b5e0d8 *data/TC_char_profiles.rda
+dad747c84c1bb33d9ee31698f82adc09 *R/textcat.R
+7339617a3d2089b48caf5b2ebcd72f4c *data/ECIMCI_profiles.rda
+0169d93d51d2e596fb2c76c49e81d0db *data/TC_byte_profiles.rda
+beca6da8f8caa7ce61567eeeeba157cf *data/TC_char_profiles.rda
 e6136c97445cea4c73408d618ec1c916 *inst/CITATION
 687dfff197273ad62691466e49c69c59 *man/ECIMCI_profiles.Rd
 7fedc1f615617df9e9b7c6b618377961 *man/TC_profiles.Rd

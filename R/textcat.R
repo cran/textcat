@@ -198,7 +198,13 @@ function(x, p = NULL, method = "CT", ..., options = list())
             for(i in seq_len(n))
                 for(j in seq_len(i - 1L))
                     d[i, j] <- xdist(x[[i]], x[[j]])
-            d <- d + t(d)
+            if(identical(attr(method, "symmetric"), TRUE)) {
+                d <- d + t(d)
+            } else {
+                for(j in seq_len(n))
+                    for(i in seq_len(j - 1L))
+                        d[i, j] <- xdist(x[[i]], x[[j]])
+            }
         }
         dimnames(d) <- list(nms, nms)            
     } else {
@@ -294,6 +300,8 @@ function(x, p)
     (sum(abs(pos - seq_along(x)), na.rm = TRUE)
      + length(p) * sum(is.na(pos)))
 }
+## This is symmetric provided that x and p have the same length (which
+## cannot generally be assumed).
 
 ## Some distance measures as mentioned in Singh (2006), "Study Of Some
 ## Distance Measures For Language And Encoding Identification",
@@ -319,6 +327,7 @@ function(x, p)
     e <- .expand_x_and_p(x, p)
     sum(abs(rank(e$x) - rank(e$p)))
 }
+attr(textcat_xdist_methods_db$ranks, "symmetric") <- TRUE
 
 ## Absolute Log Probability Difference.
 textcat_xdist_methods_db$ALPD <-
@@ -329,6 +338,7 @@ function(x, p, eps = 1e-6)
     q <- e$p / sum(e$p)
     sum(abs(log(p) - log(q)))
 }
+attr(textcat_xdist_methods_db$ALPD, "symmetric") <- TRUE
 
 ## Kullback-Leibler divergences are a mess, see e.g.
 ## <http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>:
@@ -344,7 +354,8 @@ function(x, p, eps = 1e-6)
     p <- e$x / sum(e$x)
     q <- e$p / sum(e$p)
     sum(p * log(p / q))
-}    
+}
+## This is definitely *not* symmetric.
 
 textcat_xdist_methods_db$KLJ <-
 function(x, p, eps = 1e-6)
@@ -354,6 +365,7 @@ function(x, p, eps = 1e-6)
     q <- e$p / sum(e$p)
     sum((p - q) * log(p / q))
 }
+attr(textcat_xdist_methods_db$KLJ, "symmetric") <- TRUE
 
 ## Jensen-Shannon divergence, see e.g.
 ## <http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>.
@@ -367,6 +379,7 @@ function(x, p, eps = 1e-6)
     f <- function(t) t * log(t)
     sum(f(p) + f(q)) / 2 - sum(f((p + q) / 2))
 }
+attr(textcat_xdist_methods_db$JS, "symmetric") <- TRUE
 
 ## Cosine dissimilarity
 ## Used e.g. for An Crubadan, or [to some extent] in Damashek (1995).
@@ -398,6 +411,7 @@ function(x, p)
     nmp <- names(p)
     1 - length(intersect(nmx, nmp)) / length(union(nmx, nmp))
 }
+attr(textcat_xdist_methods_db$cosine, "symmetric") <- TRUE
 
 
 ## *******************************************************************
