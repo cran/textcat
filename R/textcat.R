@@ -123,9 +123,9 @@ function(...)
 {
     args <- list(...)    
     ## Ensure common profile method and options.
-    if(length(unique(lapply(args, .profile_method)) > 1L))
+    if(length(unique(lapply(args, .profile_method))) > 1L)
         stop(gettextf("Need common profile method."))
-    if(length(unique(lapply(args, .profile_options)) > 1L))
+    if(length(unique(lapply(args, .profile_options))) > 1L)
         stop(gettextf("Need common profile options."))
     ## What about duplicated names?  Could merge ...
     if(any(duplicated(unlist(lapply(args, names)))))
