@@ -55,7 +55,7 @@ function(x, id = NULL, method = NULL, ..., options = list(),
     method <- .match_profile_method(method)    
 
     if(!is.null(id))
-        x <- split(x, rep(id, length.out = length(x)))
+        x <- split(x, rep_len(id, length(x)))
 
     profiles <- mapply(method, x, MoreArgs = options, SIMPLIFY = FALSE)
     names(profiles) <- names(x)
@@ -90,7 +90,7 @@ function(x, ...)
     nms <- unique(ngrams)
     y <- matrix(0, nrow = length(x), ncol = length(nms),
                 dimnames = list(names(x), nms))
-    y[cbind(rep.int(seq_along(x), sapply(x, length)),
+    y[cbind(rep.int(seq_along(x), lengths(x)),
             match(ngrams, nms))] <-
         unlist(x)
     y
@@ -102,7 +102,7 @@ function(x)
     ngrams <- unlist(lapply(x, names))
     nms <- unique(ngrams)
     simple_triplet_matrix(rep.int(seq_along(x),
-                                  sapply(x, length)),
+                                  lengths(x)),
                           match(ngrams, nms),
                           unlist(x),
                           dimnames = list(names(x), nms))

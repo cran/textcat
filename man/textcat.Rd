@@ -45,6 +45,7 @@ textcat(x, p = textcat::TC_char_profiles, method = "CT", ...,
   The textcat Package for \eqn{n}-Gram Based Text Categorization in R.
   \emph{Journal of Statistical Software}, \bold{52}/6, 1--17.
   \url{http://www.jstatsoft.org/v52/i06/}.
+  \doi{10.18637/jss.v052.i06}.
 }
 \examples{
 textcat(c("This is an english sentence.",
