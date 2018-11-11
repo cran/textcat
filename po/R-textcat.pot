@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: textcat 1.0-5\n"
+"POT-Creation-Date: 2017-08-12 22:23\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "Invalid option length %d."
+msgstr ""
+
+msgid "Invalid option name %s."
+msgstr ""
+
+msgid "Need common profile method."
+msgstr ""
+
+msgid "Need common profile options."
+msgstr ""
+
+msgid "Need unique ids."
+msgstr ""
+
+msgid "Invalid method length %d."
+msgstr ""
+
+msgid "Invalid profile method name %s."
+msgstr ""
+
+msgid "Invalid profile method."
+msgstr ""
+
+msgid "Invalid xdist method name %s."
+msgstr ""
+
+msgid "Invalid xdist method."
+msgstr ""

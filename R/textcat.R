@@ -253,7 +253,9 @@ function(x,
          size = 1000L)
 {
     marker <- if(reduce) "\1" else "\2"
-    x <- as.character(x)
+    ## Need to remove the markers from the text.
+    ## Spotted by <Mads.Oelsgaard@ufst.dk>.
+    x <- gsub("[\1\2]", "", x)
     if(!useBytes)
         x <- enc2utf8(x)
     counts <- textcnt(x,

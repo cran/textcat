@@ -1,8 +1,9 @@
 Package: textcat
-Version: 1.0-5
+Version: 1.0-6
 Title: N-Gram Based Text Categorization
 Authors@R: c(person("Kurt", "Hornik", role = c("aut", "cre"),
-                    email = "Kurt.Hornik@R-project.org"),
+                    email = "Kurt.Hornik@R-project.org",
+		    comment = c(ORCID = "0000-0003-4198-9911")),
              person("Johannes", "Rauch", role = "aut"),
              person("Christian", "Buchta", role = "aut",
                     email = "christian.buchta@wu.ac.at"),
@@ -14,11 +15,11 @@ Imports: tau (>= 0.0-11), slam
 License: GPL-2
 LazyData: yes
 NeedsCompilation: no
-Packaged: 2017-02-20 18:57:01 UTC; hornik
-Author: Kurt Hornik [aut, cre],
+Packaged: 2018-11-11 07:54:16 UTC; hornik
+Author: Kurt Hornik [aut, cre] (<https://orcid.org/0000-0003-4198-9911>),
   Johannes Rauch [aut],
   Christian Buchta [aut],
   Ingo Feinerer [aut]
 Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
 Repository: CRAN
-Date/Publication: 2017-02-20 21:01:13
+Date/Publication: 2018-11-11 07:56:29 UTC
