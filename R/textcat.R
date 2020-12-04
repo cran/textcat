@@ -307,7 +307,7 @@ function(x, p)
 
 ## Some distance measures as mentioned in Singh (2006), "Study Of Some
 ## Distance Measures For Language And Encoding Identification",
-## http://clair.si.umich.edu/clair/anthology/query.cgi?type=Paper&id=W06-1109.
+## <https://dl.acm.org/doi/pdf/10.5555/1641976.1641985>.
 ## We expand profiles to a common set of n-grams and, where necessary,
 ## replace 0 frequencies by (e.g.) 1e-6.
 
@@ -343,7 +343,7 @@ function(x, p, eps = 1e-6)
 attr(textcat_xdist_methods_db$ALPD, "symmetric") <- TRUE
 
 ## Kullback-Leibler divergences are a mess, see e.g.
-## <http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>:
+## <https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>:
 ## What is commonly known as "K-L divergence" is called "mean
 ## information for discrimination" in the original reference; the
 ## symmetric version is called "divergence".
@@ -370,7 +370,7 @@ function(x, p, eps = 1e-6)
 attr(textcat_xdist_methods_db$KLJ, "symmetric") <- TRUE
 
 ## Jensen-Shannon divergence, see e.g.
-## <http://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>.
+## <https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence>.
 
 textcat_xdist_methods_db$JS <-
 function(x, p, eps = 1e-6)

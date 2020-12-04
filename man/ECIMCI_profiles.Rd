@@ -25,7 +25,7 @@
   Data in Your Language: The ECI Multilingual Corpus 1.
   In ``Proceedings of the International Workshop on Sharable Natural
   Language Resources'' (Nara, Japan), 97--106.
-  \url{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.44.950}
+  \url{https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.44.950}
 }
 \examples{
 ## Languages in the the ECI/MCI profile db:

@@ -11,13 +11,13 @@ TC_char_profiles
 TC_byte_profiles
 }
 \details{
-  TextCat (\url{http://odur.let.rug.nl/~vannoord/TextCat/}) is a Perl
+  TextCat (\url{https://www.let.rug.nl/vannoord/TextCat/}) is a Perl
   implementation of the Cavnar and Trenkle \dQuote{\eqn{N}-Gram-Based
     Text Categorization} technique by Gertjan van Noord which was
   subsequently integrated into SpamAssassin.  It provides byte
   \eqn{n}-gram profiles for 74 \dQuote{languages} (more precisely,
   language/encoding combinations).  The C library reimplementation
-  \code{libtextcat} (\url{http://software.wise-guys.nl/libtextcat/})
+  \code{libtextcat} (\url{https://software.wise-guys.nl/libtextcat/})
   adds one more non-empty profile.
 
   \code{TC_byte_profiles} provides these byte profiles.
@@ -33,7 +33,7 @@ TC_byte_profiles
   parts of Ulster, to be distinguished from Scottish Gaelic (named
   \sQuote{scots_gaelic} in the profiles), the Celtic language variety
   spoken in most of the western Highlands and in the Hebrides (see
-  \url{http://en.wikipedia.org/wiki/Scots_language}).
+  \url{https://en.wikipedia.org/wiki/Scots_language}).
 }
 \examples{
 ## Languages in the TC byte profiles:
