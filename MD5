@@ -1,11 +1,11 @@
-63ba7320e000377c72cbc76c1e7317b7 *DESCRIPTION
+027527ed6b1f3a4ad848e85428e3877f *DESCRIPTION
 ca23b241df78084237b76f8a6e0f26a1 *NAMESPACE
 5841a5d5f1f3741886b59b57653584d8 *R/textcat.R
-ab4fd1131293f8ed324d54ea704564dd *build/partial.rdb
-6de74f391e5c25dfea8b03f1a512cec9 *data/ECIMCI_profiles.rda
-8175cc13e2f1b76649238c86fc8dadb5 *data/TC_byte_profiles.rda
-be537ea2aa15310a347bfd1dc09ddded *data/TC_char_profiles.rda
-28b025a69962dfad81f415d51426a3af *inst/CITATION
+ea124a494ad7922985532ad3b308e4d5 *build/partial.rdb
+403bf8365fb16645e1e4ecf1f65f0f2a *data/ECIMCI_profiles.rda
+81e1086b2a70565d6dd51f7fe1b750c1 *data/TC_byte_profiles.rda
+243fed73e66a484534cfdfd216554d3f *data/TC_char_profiles.rda
+a9c7cb0a5337dce6cb3fad720e6c59cf *inst/CITATION
 1b039686c0b3c62b15b107dd5be254d9 *inst/po/en@quot/LC_MESSAGES/R-textcat.mo
 2253fda45c16ea6699fad77632f4e515 *man/ECIMCI_profiles.Rd
 53ae652cd2170bcfdc1b38baeaef82ac *man/TC_profiles.Rd
