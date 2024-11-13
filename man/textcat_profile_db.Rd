@@ -41,7 +41,7 @@ textcat_profile_db(x, id = NULL, method = NULL, ...,
   There is a \code{\link{c}} method for combining profile dbs provided
   that these have identical options.  There are also a \code{[} method
   for subscripting and \code{\link{as.matrix}} and
-  \code{\link[slam:matrix]{as.simple_triplet_matrix}} methods to
+  \code{\link[slam]{as.simple_triplet_matrix}} methods to
   \dQuote{export} the profiles to a dense matrix or the sparse simple
   triplet matrix representation provided by package \pkg{slam},
   respectively.

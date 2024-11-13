@@ -16,9 +16,9 @@ TC_byte_profiles
     Text Categorization} technique by Gertjan van Noord which was
   subsequently integrated into SpamAssassin.  It provides byte
   \eqn{n}-gram profiles for 74 \dQuote{languages} (more precisely,
-  language/encoding combinations).  The C library reimplementation
-  \code{libtextcat} (\url{https://software.wise-guys.nl/libtextcat/})
-  adds one more non-empty profile.
+  language/encoding combinations).  The wiseguys C library
+  reimplementation \code{libtextcat} adds one more non-empty profile
+  (see (\url{https://wiki.documentfoundation.org/Libexttextcat}).
 
   \code{TC_byte_profiles} provides these byte profiles.
 
